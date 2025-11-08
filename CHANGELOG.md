@@ -5,6 +5,23 @@ All notable changes to `laravel-db-chat` will be documented in this file.
 ## [Unreleased]
 
 ### Added
+- (next release: v0.1.2)
+
+### Fixed
+-
+
+## [v0.1.1] - 2025-11-08
+
+### Changed
+- Broadened `illuminate/*` dependency constraints to include Laravel 12 so the package can be installed into Laravel 12 projects.
+- Bumped package development version to `0.1.1` in `composer.json`.
+
+### Notes
+- This is a metadata/compatibility release. Run tests against Laravel 12 to confirm runtime compatibility.
+
+## [v0.1.0] - 2025-11-07
+
+### Added
 - Initial release
 - Database-driven chat system for Laravel
 - Support for direct (1:1) and group conversations
@@ -30,11 +47,6 @@ All notable changes to `laravel-db-chat` will be documented in this file.
 - Authorization middleware to ensure users can only access their conversations
 - Rate limiting to prevent abuse
 - Input validation on all endpoints
-
-## [1.0.0] - 2025-11-08
-
-### Added
-- First stable release
 
 ---
 
