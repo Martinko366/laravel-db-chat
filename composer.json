@@ -1,0 +1,42 @@
+{
+    "name": "martinko366/laravel-db-chat",
+    "description": "A database-driven chat package for Laravel with long-polling support",
+    "keywords": ["laravel", "chat", "database", "long-polling", "messaging"],
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Martinko366",
+            "email": "your-email@example.com"
+        }
+    ],
+    "require": {
+        "php": "^8.1",
+        "illuminate/support": "^10.0|^11.0",
+        "illuminate/database": "^10.0|^11.0",
+        "illuminate/http": "^10.0|^11.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^10.0",
+        "orchestra/testbench": "^8.0|^9.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Martinko366\\LaravelDbChat\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Martinko366\\LaravelDbChat\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Martinko366\\LaravelDbChat\\DbChatServiceProvider"
+            ]
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
