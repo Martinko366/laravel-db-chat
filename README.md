@@ -1,5 +1,12 @@
 # Laravel DB Chat
 
+[![Tests](https://github.com/Martinko366/laravel-db-chat/actions/workflows/tests.yml/badge.svg)](https://github.com/Martinko366/laravel-db-chat/actions/workflows/tests.yml)
+[![Code Style](https://github.com/Martinko366/laravel-db-chat/actions/workflows/code-style.yml/badge.svg)](https://github.com/Martinko366/laravel-db-chat/actions/workflows/code-style.yml)
+[![Latest Stable Version](https://poser.pugx.org/martinko366/laravel-db-chat/v/stable)](https://packagist.org/packages/martinko366/laravel-db-chat)
+[![Total Downloads](https://poser.pugx.org/martinko366/laravel-db-chat/downloads)](https://packagist.org/packages/martinko366/laravel-db-chat)
+[![License](https://poser.pugx.org/martinko366/laravel-db-chat/license)](https://packagist.org/packages/martinko366/laravel-db-chat)
+[![PHP Version Require](https://poser.pugx.org/martinko366/laravel-db-chat/require/php)](https://packagist.org/packages/martinko366/laravel-db-chat)
+
 A database-driven chat package for Laravel with long-polling support. No Redis, Pusher, or external services required - everything runs on your existing database.
 
 ## Features
