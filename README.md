@@ -10,7 +10,7 @@ A database-driven chat package for Laravel with long-polling support. No Redis, 
 - ✅ **Read Receipts** - Track who has seen which messages
 - ✅ **Cursor-based Polling** - Efficient message fetching using monotonic IDs
 - ✅ **Rate Limiting** - Built-in protection against abuse
-- ✅ **Laravel 10 & 11** - Compatible with modern Laravel versions
+- ✅ **Laravel 10, 11 & 12** - Compatible with modern Laravel versions
 
 ## Installation
 
