@@ -45,7 +45,7 @@ class ConversationService
             if ($type === 'direct') {
                 $existing = $this->findDirectConversation($participantIds);
                 if ($existing) {
-                    return $existing;
+                    return $existing->load(['participants.user', 'latestMessage.sender']);
                 }
             }
 
@@ -64,7 +64,7 @@ class ConversationService
                 ]);
             }
 
-            return $conversation->load('participants');
+            return $conversation->load(['participants.user', 'latestMessage.sender']);
         });
     }
 
@@ -115,11 +115,13 @@ class ConversationService
             throw new InvalidArgumentException('User is already a participant');
         }
 
-        return Participant::create([
+        $participant = Participant::create([
             'conversation_id' => $conversation->id,
             'user_id' => $userId,
             'joined_at' => now(),
         ]);
+
+        return $participant->load('user');
     }
 
     /**
@@ -151,7 +153,7 @@ class ConversationService
     public function getUserConversations(int $userId)
     {
         return Conversation::forUser($userId)
-            ->with(['latestMessage', 'participants.user'])
+            ->with(['latestMessage.sender', 'participants.user'])
             ->orderByDesc(function ($query) {
                 $query->select('created_at')
                     ->from(config('dbchat.tables.messages', 'chat_messages'))

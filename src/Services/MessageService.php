@@ -4,8 +4,6 @@ namespace Martinko366\LaravelDbChat\Services;
 
 use Martinko366\LaravelDbChat\Models\Message;
 use Martinko366\LaravelDbChat\Models\MessageRead;
-use Martinko366\LaravelDbChat\Models\Conversation;
-use Illuminate\Support\Facades\DB;
 use InvalidArgumentException;
 
 class MessageService
@@ -39,7 +37,7 @@ class MessageService
             'attachments' => $attachments,
         ]);
 
-        return $message->load('sender');
+        return $message->load(['sender', 'reads']);
     }
 
     /**
@@ -74,10 +72,10 @@ class MessageService
     {
         $query = Message::inConversations($conversationIds)
             ->after($afterMessageId)
-            ->with(['sender', 'conversation'])
+            ->with(['sender', 'conversation', 'reads'])
             ->orderBy('id');
 
-        if ($limit) {
+        if (!is_null($limit)) {
             $query->limit($limit);
         }
 
@@ -97,7 +95,7 @@ class MessageService
         $query = Message::where('conversation_id', $conversationId)
             ->with(['sender', 'reads']);
 
-        if ($beforeMessageId) {
+        if (!is_null($beforeMessageId)) {
             $query->before($beforeMessageId);
         }
 

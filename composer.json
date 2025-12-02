@@ -1,7 +1,7 @@
 {
     "name": "martinko366/laravel-db-chat",
     "description": "A database-driven chat package for Laravel with long-polling support",
-    "version": "0.1.1",
+    "version": "0.1.2",
     "keywords": ["laravel", "chat", "database", "long-polling", "messaging"],
     "type": "library",
     "license": "MIT",

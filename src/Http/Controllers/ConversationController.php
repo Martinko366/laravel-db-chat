@@ -4,10 +4,13 @@ namespace Martinko366\LaravelDbChat\Http\Controllers;
 
 use Martinko366\LaravelDbChat\Services\ConversationService;
 use Martinko366\LaravelDbChat\Models\Conversation;
-use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use Illuminate\Validation\Rule;
+use Martinko366\LaravelDbChat\Http\Requests\StoreConversationRequest;
+use Martinko366\LaravelDbChat\Http\Requests\AddParticipantRequest;
+use Martinko366\LaravelDbChat\Http\Resources\ConversationResource;
+use Martinko366\LaravelDbChat\Http\Resources\ParticipantResource;
 
 class ConversationController extends Controller
 {
@@ -25,21 +28,16 @@ class ConversationController extends Controller
         );
 
         return response()->json([
-            'conversations' => $conversations,
+            'conversations' => ConversationResource::collection($conversations),
         ]);
     }
 
     /**
      * Create a new conversation.
      */
-    public function store(Request $request): JsonResponse
+    public function store(StoreConversationRequest $request): JsonResponse
     {
-        $validated = $request->validate([
-            'type' => ['required', Rule::in(['direct', 'group'])],
-            'participants' => 'required|array|min:1',
-            'participants.*' => 'required|integer',
-            'title' => 'nullable|string|max:255',
-        ]);
+        $validated = $request->validated();
 
         try {
             $conversation = $this->conversationService->create(
@@ -50,7 +48,7 @@ class ConversationController extends Controller
             );
 
             return response()->json([
-                'conversation' => $conversation,
+                'conversation' => ConversationResource::make($conversation),
             ], 201);
         } catch (\InvalidArgumentException $e) {
             return response()->json([
@@ -71,17 +69,17 @@ class ConversationController extends Controller
             ], 403);
         }
 
-        $conversation->load(['participants.user', 'latestMessage']);
+        $conversation->load(['participants.user', 'latestMessage.sender']);
 
         return response()->json([
-            'conversation' => $conversation,
+            'conversation' => ConversationResource::make($conversation),
         ]);
     }
 
     /**
      * Add a participant to a group conversation.
      */
-    public function addParticipant(Request $request, Conversation $conversation): JsonResponse
+    public function addParticipant(AddParticipantRequest $request, Conversation $conversation): JsonResponse
     {
         // Check if user is a participant
         if (!$conversation->hasParticipant($request->user()->id)) {
@@ -90,9 +88,7 @@ class ConversationController extends Controller
             ], 403);
         }
 
-        $validated = $request->validate([
-            'user_id' => 'required|integer',
-        ]);
+        $validated = $request->validated();
 
         try {
             $participant = $this->conversationService->addParticipant(
@@ -101,7 +97,7 @@ class ConversationController extends Controller
             );
 
             return response()->json([
-                'participant' => $participant->load('user'),
+                'participant' => ParticipantResource::make($participant),
             ], 201);
         } catch (\InvalidArgumentException $e) {
             return response()->json([

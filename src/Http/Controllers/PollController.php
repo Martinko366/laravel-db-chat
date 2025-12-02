@@ -4,9 +4,10 @@ namespace Martinko366\LaravelDbChat\Http\Controllers;
 
 use Martinko366\LaravelDbChat\Services\MessageService;
 use Martinko366\LaravelDbChat\Models\Participant;
-use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
+use Martinko366\LaravelDbChat\Http\Requests\PollMessagesRequest;
+use Martinko366\LaravelDbChat\Http\Resources\MessageResource;
 
 class PollController extends Controller
 {
@@ -17,11 +18,9 @@ class PollController extends Controller
     /**
      * Long polling endpoint for realtime message updates.
      */
-    public function __invoke(Request $request): JsonResponse
+    public function __invoke(PollMessagesRequest $request): JsonResponse
     {
-        $validated = $request->validate([
-            'after_message_id' => 'required|integer|min:0',
-        ]);
+        $validated = $request->validated();
 
         // Get all conversation IDs where user is a participant
         $conversationIds = Participant::where('user_id', $request->user()->id)
@@ -52,7 +51,7 @@ class PollController extends Controller
 
         return response()->json([
             'last_message_id' => $result['last_message_id'],
-            'messages' => $result['messages'],
+            'messages' => MessageResource::collection($result['messages']),
         ]);
     }
 }

@@ -5,10 +5,21 @@ All notable changes to `laravel-db-chat` will be documented in this file.
 ## [Unreleased]
 
 ### Added
-- (next release: v0.1.2)
+-
 
 ### Fixed
 -
+
+## [v0.1.2] - 2025-11-23
+
+### Added
+- Dedicated Form Request classes with reusable validation logic and sensible defaults for conversations, participants, messages, and polling endpoints.
+- JSON Resource classes for conversations, participants, messages, and read receipts to provide consistent API payloads.
+
+### Fixed
+- Validation now enforces that referenced user IDs actually exist and normalizes rule definitions to array syntax.
+- Default pagination and polling parameters are prepared before validation to avoid missing values and null-to-null comparisons in downstream services.
+- Message and conversation service responses eagerly load the relationships expected by the new resources, preventing missing data in API responses.
 
 ## [v0.1.1] - 2025-11-08
 

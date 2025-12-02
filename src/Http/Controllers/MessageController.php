@@ -8,6 +8,9 @@ use Martinko366\LaravelDbChat\Models\Message;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
+use Martinko366\LaravelDbChat\Http\Requests\ListMessagesRequest;
+use Martinko366\LaravelDbChat\Http\Requests\StoreMessageRequest;
+use Martinko366\LaravelDbChat\Http\Resources\MessageResource;
 
 class MessageController extends Controller
 {
@@ -18,7 +21,7 @@ class MessageController extends Controller
     /**
      * Get messages for a conversation.
      */
-    public function index(Request $request, Conversation $conversation): JsonResponse
+    public function index(ListMessagesRequest $request, Conversation $conversation): JsonResponse
     {
         // Check if user is a participant
         if (!$conversation->hasParticipant($request->user()->id)) {
@@ -27,26 +30,23 @@ class MessageController extends Controller
             ], 403);
         }
 
-        $validated = $request->validate([
-            'before_message_id' => 'nullable|integer',
-            'limit' => 'nullable|integer|min:1|max:100',
-        ]);
+        $validated = $request->validated();
 
         $messages = $this->messageService->getMessages(
             $conversation->id,
             $validated['before_message_id'] ?? null,
-            $validated['limit'] ?? config('dbchat.messages.pagination_limit', 50)
+            $validated['limit']
         );
 
         return response()->json([
-            'messages' => $messages,
+            'messages' => MessageResource::collection($messages),
         ]);
     }
 
     /**
      * Send a message in a conversation.
      */
-    public function store(Request $request, Conversation $conversation): JsonResponse
+    public function store(StoreMessageRequest $request, Conversation $conversation): JsonResponse
     {
         // Check if user is a participant
         if (!$conversation->hasParticipant($request->user()->id)) {
@@ -55,10 +55,7 @@ class MessageController extends Controller
             ], 403);
         }
 
-        $validated = $request->validate([
-            'body' => 'required|string',
-            'attachments' => 'nullable|array',
-        ]);
+        $validated = $request->validated();
 
         try {
             $message = $this->messageService->send(
@@ -69,7 +66,7 @@ class MessageController extends Controller
             );
 
             return response()->json([
-                'message' => $message,
+                'message' => MessageResource::make($message),
             ], 201);
         } catch (\InvalidArgumentException $e) {
             return response()->json([
